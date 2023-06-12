@@ -6,6 +6,7 @@ const { faker } = require('@faker-js/faker');
 const app = express();
 const port = 3010;
 
+//this is a middleware were we can use a json in the body request
 app.use(express.json());
 
 routerApi(app);

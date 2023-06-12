@@ -26,5 +26,15 @@ router.get('/:categoryId/products/:productId', (req, res) => {
   }]);
 });
 
+router.put('/:categoryId', (req, res) => {
+  const { categoryId } = req.params;
+  const body = req.body;
+  res.json({
+    message: 'updated category',
+    data : body,
+    categoryId,
+  })
+})
+
 
 module.exports = router;
