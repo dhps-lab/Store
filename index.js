@@ -6,6 +6,7 @@ const { faker } = require('@faker-js/faker');
 const app = express();
 const port = 3010;
 
+app.use(express.json());
 
 routerApi(app);
 
