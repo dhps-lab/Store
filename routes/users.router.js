@@ -14,4 +14,13 @@ router.get('/', (req, res) => {
   }
 })
 
+router.post('/',(req, res) => {
+  const body = req.body;
+  res.json({
+    message: 'User created',
+    data: body,
+    rc:'200'
+  })
+});
+
 module.exports = router;
