@@ -12,6 +12,24 @@ router.get('/', (req, res) => {
   }]);
 });
 
+
+router.get('/:categoryId', (req, res) => {
+  const { categoryId } = req.params;
+  const body = req.body;
+  if (parseInt(categoryId) === 999){
+    console.log('In if')
+    res.status(404).json({
+      message: 'Not found'
+    });
+  } else {
+    res.json({
+      message: 'updated category',
+      data : body,
+      categoryId,
+    })
+  }
+})
+
 router.get('/:categoryId/products/:productId', (req, res) => {
   const { productId, categoryId } = req.params;
 
@@ -29,12 +47,13 @@ router.get('/:categoryId/products/:productId', (req, res) => {
 router.put('/:categoryId', (req, res) => {
   const { categoryId } = req.params;
   const body = req.body;
-  res.json({
-    message: 'updated category',
-    data : body,
-    categoryId,
-  })
+    res.json({
+      message: 'updated category',
+      data : body,
+      categoryId,
+    })
 })
+
 
 
 module.exports = router;
