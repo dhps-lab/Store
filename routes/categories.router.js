@@ -1,15 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const CategoriesService = require('../services/category.service');
+const service = new CategoriesService();
 
 
 router.get('/', (req, res) => {
-  res.json([{
-    category:'Grocery',
-    description: 'This is a category general'
-  }, {
-    category: 'home',
-    description: 'This is a home product'
-  }]);
+  const categories = service.find();
+  res.json(categories);
 });
 
 
