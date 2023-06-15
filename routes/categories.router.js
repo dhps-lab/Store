@@ -41,16 +41,24 @@ router.get('/:categoryId/products/:productId', (req, res) => {
   }]);
 });
 
+router.post('/', (req, res) => {
+  const body = req.body;
+  const newCategory = service.create(body);
+    res.status(201).json(newCategory);
+})
+
 router.put('/:categoryId', (req, res) => {
   const { categoryId } = req.params;
   const body = req.body;
-    res.json({
-      message: 'updated category',
-      data : body,
-      categoryId,
-    })
+  const updateCategory = service.update(categoryId, body);
+  res.json(updateCategory);
 })
 
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  const deleteCategory = service.delete(id);
+  res.json(deleteCategory);
+});
 
 
 module.exports = router;
