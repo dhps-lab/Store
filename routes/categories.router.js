@@ -10,13 +10,14 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:categoryId', async (req, res) => {
+router.get('/:categoryId', async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const category = await service.findOne(categoryId);
     res.json(category);
   } catch (err) {
-    res.status(404).json({ error: err.message});
+    // res.status(404).json({ error: err.message});  //Este es la forma normal de manejar un error
+    next(err);  //This a way with Middleware
   }
 
 })
