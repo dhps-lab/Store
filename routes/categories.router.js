@@ -4,27 +4,21 @@ const CategoriesService = require('../services/category.service');
 const service = new CategoriesService();
 
 
-router.get('/', (req, res) => {
-  const categories = service.find();
+router.get('/', async (req, res) => {
+  const categories = await service.find();
   res.json(categories);
 });
 
 
 router.get('/:categoryId', (req, res) => {
-  const { categoryId } = req.params;
-  const body = req.body;
-  if (parseInt(categoryId) === 999){
-    console.log('In if')
-    res.status(404).json({
-      message: 'Not found'
-    });
-  } else {
-    res.json({
-      message: 'updated category',
-      data : body,
-      categoryId,
-    })
+  try {
+    const { categoryId } = req.params;
+    const category = service.findOne(categoryId);
+    res.json(category);
+  } catch (err) {
+    res.status(404).json({ error: err.message});
   }
+
 })
 
 router.get('/:categoryId/products/:productId', (req, res) => {
@@ -47,11 +41,16 @@ router.post('/', (req, res) => {
     res.status(201).json(newCategory);
 })
 
-router.put('/:categoryId', (req, res) => {
-  const { categoryId } = req.params;
-  const body = req.body;
-  const updateCategory = service.update(categoryId, body);
-  res.json(updateCategory);
+router.put('/:categoryId', async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+    const body = req.body;
+    const updateCategory = await service.update(categoryId, body);
+    res.json(updateCategory);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: error.message});
+  }
 })
 
 router.delete('/:id', (req, res) => {
