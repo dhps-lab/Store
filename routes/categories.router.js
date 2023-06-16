@@ -10,10 +10,10 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:categoryId', (req, res) => {
+router.get('/:categoryId', async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const category = service.findOne(categoryId);
+    const category = await service.findOne(categoryId);
     res.json(category);
   } catch (err) {
     res.status(404).json({ error: err.message});
@@ -35,9 +35,9 @@ router.get('/:categoryId/products/:productId', (req, res) => {
   }]);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const body = req.body;
-  const newCategory = service.create(body);
+  const newCategory = await service.create(body);
     res.status(201).json(newCategory);
 })
 
@@ -53,9 +53,9 @@ router.put('/:categoryId', async (req, res) => {
   }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const deleteCategory = service.delete(id);
+  const deleteCategory = await service.delete(id);
   res.json(deleteCategory);
 });
 
