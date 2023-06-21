@@ -13,6 +13,7 @@ const port = process.env.PORT || 3010;
 //this is a middleware were we can use a json in the body request
 app.use(express.json());
 
+console.log('My app express server');
 
 
 // Only cors(), whatever server can connect to our API.
