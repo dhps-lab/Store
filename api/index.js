@@ -8,7 +8,7 @@ const { errorHandler, logErrors, boomErrorHandler } = require('./middlewares/err
 
 
 const app = express();
-const port = 3010;
+const port = process.env.PORT || 3010;
 
 //this is a middleware were we can use a json in the body request
 app.use(express.json());
