@@ -1,17 +1,18 @@
 const boom = require('@hapi/boom');
 
-const getConnection = require('../libs/postgres');
+const pool = require('../libs/postgres.pool');
 
 class UserService {
   constructor(){}
 
   async create(data){
+    const query = 'INSERT INTO users (username, email, password) VALUES'
+
     return data;
   }
 
   async find(){
-    const client = await getConnection();
-    const rta = await client.query('SELECT * FROM users');
+    const rta = await pool.query('SELECT * FROM users');
     console.log(rta.rows);
     return rta.rows;
   }

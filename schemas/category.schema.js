@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 // Here only format fields are supported
-const id = Joi.string().uuid();
+const id = Joi.number();
 const name = Joi.string().alphanum().min(3).max(15);
 const image = Joi.string().uri();
 
