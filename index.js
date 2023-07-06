@@ -6,9 +6,11 @@ const cors = require('cors');
 const routerApi = require('./routes/index');
 const { errorHandler, logErrors, boomErrorHandler } = require('./middlewares/error.handler');
 
+const config = require('./config/config');
+
 
 const app = express();
-const port = process.env.PORT || 3010;
+const port = config.port || 3010;
 
 //this is a middleware were we can use a json in the body request
 app.use(express.json());
