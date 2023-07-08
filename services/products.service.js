@@ -1,4 +1,5 @@
 const { faker } = require('@faker-js/faker');
+const { models } = require('./../libs/sequelize');
 
 class ProductsService {
 
@@ -21,7 +22,8 @@ class ProductsService {
   }
 
   find(){
-    return this.products;
+    const rta = models.Product.findAll();
+    return rta;
   }
 
   findOne(id){
