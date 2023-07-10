@@ -4,7 +4,7 @@ const { faker } = require('@faker-js/faker');
 const cors = require('cors');
 
 const routerApi = require('./routes/index');
-const { errorHandler, logErrors, boomErrorHandler } = require('./middlewares/error.handler');
+const { errorHandler, logErrors, boomErrorHandler, sequelizeErrorHandler } = require('./middlewares/error.handler');
 
 const config = require('./config/config');
 
@@ -35,6 +35,7 @@ app.use(cors());
 routerApi(app);
 
 app.use(logErrors);
+app.use(sequelizeErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 

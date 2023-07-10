@@ -1,32 +1,42 @@
 const boom = require('@hapi/boom');
 
 const pool = require('../libs/postgres.pool');
+const { models } = require('../libs/sequelize');
 
 class UserService {
   constructor(){}
 
   async create(data){
-    const query = 'INSERT INTO users (username, email, password) VALUES'
-
-    return data;
+    console.log(models);
+    const newUser = await models.User.create(data);
+    console.log(newUser);
+    return newUser;
   }
 
   async find(){
-    const rta = await pool.query('SELECT * FROM users');
-    console.log(rta.rows);
-    return rta.rows;
+    const users = await models.User.findAll();
+    console.log(users);
+    return users;
   }
 
   async findOne(id){
-
+    const user = await models.User.findByPk(id);
+    if(!user){
+      boom.notFound('User not found');
+    }
+    return user;
   }
 
   async update(id, changes){
-
+    const user = await this.findOne(id);
+    const answ = await user.update(changes);
+    return answ;
   }
 
   async delete(id){
-
+    const user = await this.findOne(id);
+    await user.destroy();
+    return { id };
   }
 
 

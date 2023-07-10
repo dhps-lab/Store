@@ -1,6 +1,8 @@
 const express = require('express');
 
+const validatorHandler = require('./../middlewares/validator.handler')
 const UserService = require('../services/user.service');
+const { createUserSchema, deleteUserSchema, getUserSchema, updateUserSchema } = require('./../schemas/user.schema');
 
 const router = express.Router();
 const service = new UserService();
@@ -23,13 +25,18 @@ router.get('/', async (req, res, next) => {
 
 })
 
-router.post('/',(req, res) => {
-  const body = req.body;
-  res.json({
-    message: 'User created',
-    data: body,
-    rc:'200'
-  })
-});
+router.post('/',
+  validatorHandler(createUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      console.log(body);
+      const newUser = await service.create(body);
+      res.json(newUser);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 module.exports = router;
