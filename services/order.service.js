@@ -14,13 +14,18 @@ class OrderService {
   }
 
   async find(){
-    const orders = await models.Order.findAll();
+    const orders = await models.Order.findAll({
+      include: ['customer']
+    });
     return orders;
   }
 
   async findOne(id){
     const order = await models.Order.findByPk(id, {
-      include: ['customer']
+      include: [{
+        association: 'customer',
+        include: ['user']
+      }]
     });
     return order;
   }

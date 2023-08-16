@@ -21,7 +21,8 @@ router.get('/:id',
   validatorHandler(getOrderSchema, 'params'),
   async (req,res,next) => {
     try{
-      const orders = await service.findOne();
+      const { id } = req.params;
+      const orders = await service.findOne(id);
       return res.json(orders);
     }catch(err){
       next(err);
