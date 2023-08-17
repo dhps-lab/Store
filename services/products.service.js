@@ -5,7 +5,7 @@ class ProductsService {
 
   constructor(){
     this.products = [];
-    this.generate();
+    //this.generate();
   }
 
   generate(){
@@ -21,8 +21,10 @@ class ProductsService {
     }
   }
 
-  find(){
-    const rta = models.Product.findAll();
+  async find(){
+    const rta = models.Product.findAll({
+      include: ['category']
+    });
     return rta;
   }
 
@@ -30,12 +32,15 @@ class ProductsService {
     return this.products.find(item => item.id === id);
   }
 
-  create(data){
-    const newProduct = {
-      id: faker.string.uuid(),
-      ...data
-    }
-    this.products.push(newProduct);
+  async create(data){
+    // const newProduct = {
+    //   id: faker.string.uuid(),
+    //   ...data
+    // }
+    // this.products.push(newProduct);
+    // return newProduct;
+    console.log(data);
+    const newProduct = await models.Product.create(data);
     return newProduct;
   }
 

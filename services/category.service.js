@@ -9,7 +9,7 @@ class CategoriesService {
 
   constructor(){
     this.categories = [];
-    this.generate();
+    //this.generate();
   }
 
   generate(){
@@ -26,21 +26,23 @@ class CategoriesService {
   }
 
   async create (data){
-    const newCategory = {
-      id: faker.string.uuid(),
-      ...data
-    };
-    this.categories.push(newCategory);
+    // const newCategory = {
+    //   id: faker.string.uuid(),
+    //   ...data
+    // };
+    // this.categories.push(newCategory);
 
-    const queryId = 'SELECT (max(id) + 1) AS id FROM categories';
-    const { rows } = await this.pool.query(queryId);
+    // const queryId = 'SELECT (max(id) + 1) AS id FROM categories';
+    // const { rows } = await this.pool.query(queryId);
 
 
-    let { name, image } = data;
-    const values = [rows[0].id, name, image];
-    const query = 'INSERT INTO categories (id, name, image) VALUES ($1, $2, $3)';
-    const result = await pool.query(query, values);
-    return result.rows || 'Error';
+    // let { name, image } = data;
+    // const values = [rows[0].id, name, image];
+    // const query = 'INSERT INTO categories (id, name, image) VALUES ($1, $2, $3)';
+    // const result = await pool.query(query, values);
+    // return result.rows || 'Error';
+    const newCategory = await models.Category.create(data);
+    return newCategory;
   }
 
   async find (){

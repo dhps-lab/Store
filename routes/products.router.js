@@ -2,14 +2,16 @@ const express = require('express');
 const { faker } = require('@faker-js/faker');
 const router = express.Router();
 const ProductsService = require('../services/products.service');
+const validatorHandler = require('../middlewares/validator.handler');
+const { createProductSchema } = require('../schemas/product.shcema');
 const service = new ProductsService();
 
 router.get('/filter', (req, res) => {
   res.send(faker.commerce.productName());
 })
 
-router.get('/', (req, res) => {
-  const products = service.find();
+router.get('/', async (req, res) => {
+  const products = await service.find();
   res.status(200).json(products);
 });
 
@@ -20,9 +22,11 @@ router.get('/:id', (req, res) => {
   res.status(200).json(product);
 });
 
-router.post('/', (req, res) => {
+router.post('/',
+  validatorHandler(createProductSchema, 'body'),
+  async (req, res) => {
   const body = req.body;
-  const product = service.create(body);
+  const product = await service.create(body);
   res.status(201).json(product);
 });
 
