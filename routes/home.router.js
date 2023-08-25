@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { checkApiKey } = require('../middlewares/auth.handler');
 
 router.get('/', (req, res) => {
   res.send('Hello my server on express')
 });
 
-router.get('/shopping-cart', (req, res) => {
+router.get('/shopping-cart', checkApiKey, (req, res) => {
   res.send('Hello, I\'m a new path');
 });
 
