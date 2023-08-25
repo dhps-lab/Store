@@ -4,15 +4,18 @@ const { faker } = require('@faker-js/faker');
 const cors = require('cors');
 
 const routerApi = require('./routes/index');
-const { errorHandler, logErrors, boomErrorHandler } = require('./middlewares/error.handler');
+const { errorHandler, logErrors, boomErrorHandler, sequelizeErrorHandler } = require('./middlewares/error.handler');
+
+const config = require('./config/config');
 
 
 const app = express();
-const port = 3010;
+const port = config.port || 3010;
 
 //this is a middleware were we can use a json in the body request
 app.use(express.json());
 
+console.log('My app express server');
 
 
 // Only cors(), whatever server can connect to our API.
@@ -32,6 +35,7 @@ app.use(cors());
 routerApi(app);
 
 app.use(logErrors);
+app.use(sequelizeErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 

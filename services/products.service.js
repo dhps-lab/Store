@@ -1,10 +1,12 @@
 const { faker } = require('@faker-js/faker');
+const { Op } = require('sequelize');
+const { models } = require('./../libs/sequelize');
 
 class ProductsService {
 
   constructor(){
     this.products = [];
-    this.generate();
+    //this.generate();
   }
 
   generate(){
@@ -20,20 +22,44 @@ class ProductsService {
     }
   }
 
-  find(){
-    return this.products;
+  async find(query){
+    const options = {
+      include: ['category'],
+      where: {}
+    };
+    const { limit, offset } = query;
+    if (limit && offset) {
+      options.limit = limit;
+      options.offset = offset;
+    }
+    const { price } = query;
+    if (price) {
+      options.where.price = price;
+    }
+    const { price_min, price_max } = query;
+    if( price_min && price_max){
+      options.where.price = {
+        [Op.gte]: price_min,
+        [Op.lte]: price_max
+      }
+    }
+    const rta = models.Product.findAll(options);
+    return rta;
   }
 
   findOne(id){
     return this.products.find(item => item.id === id);
   }
 
-  create(data){
-    const newProduct = {
-      id: faker.string.uuid(),
-      ...data
-    }
-    this.products.push(newProduct);
+  async create(data){
+    // const newProduct = {
+    //   id: faker.string.uuid(),
+    //   ...data
+    // }
+    // this.products.push(newProduct);
+    // return newProduct;
+    console.log(data);
+    const newProduct = await models.Product.create(data);
     return newProduct;
   }
 

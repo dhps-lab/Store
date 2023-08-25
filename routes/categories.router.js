@@ -68,9 +68,14 @@ router.put('/:id',
 router.delete('/:id',
   validatorHandler(deleteCategorySchema, 'params'),
   async (req, res) => {
-    const { id } = req.params;
-    const deleteCategory = await service.delete(id);
-    res.json(deleteCategory);
+    try {
+      const { id } = req.params;
+      const deleteCategory = await service.delete(id);
+      res.json(deleteCategory);
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({ message: error.message});
+    }
   }
 );
 

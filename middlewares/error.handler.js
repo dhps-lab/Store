@@ -1,4 +1,5 @@
 const { request } = require("express");
+const { Sequelize } = require("sequelize");
 
 function logErrors(err,req,res,next) {
   console.error(err); // monitored error in console
@@ -12,6 +13,20 @@ function errorHandler(err,req,res,next) {
   })
 }
 
+function sequelizeErrorHandler(err,req,res,next) {
+  if (err instanceof Sequelize.BaseError) {
+    const { output, fields } = err;
+    const outputJson = {
+      message: `Seems something is wrong with field ${Object.keys(fields)}`,
+      fields: fields
+    }
+    console.log(`Seems something is wrong with field ${fields}`);
+    res.status(409).json(outputJson);
+  }else{
+    next(err);
+  }
+}
+
 function boomErrorHandler(err,req,res,next) {
   if (err.isBoom){
     const { output } = err;
@@ -21,4 +36,4 @@ function boomErrorHandler(err,req,res,next) {
   }
 }
 
-module.exports = { logErrors, errorHandler, boomErrorHandler };
+module.exports = { logErrors, errorHandler, boomErrorHandler, sequelizeErrorHandler };
