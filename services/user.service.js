@@ -1,15 +1,18 @@
 const boom = require('@hapi/boom');
+const bcrypt = require('bcrypt');
 
-const pool = require('../libs/postgres.pool');
 const { models } = require('../libs/sequelize');
 
 class UserService {
   constructor(){}
 
   async create(data){
-    console.log(models);
-    const newUser = await models.User.create(data);
-    console.log(newUser);
+    const hash = await bcrypt.hash(data.password,10);
+    const newUser = await models.User.create({
+      ...data,
+      password: hash
+    });
+    delete newUser.dataValues.password;
     return newUser;
   }
 
