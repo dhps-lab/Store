@@ -4,6 +4,8 @@ const router = express.Router();
 const ProductsService = require('../services/products.service');
 const validatorHandler = require('../middlewares/validator.handler');
 const { createProductSchema, queryProductSchema } = require('../schemas/product.shcema');
+const passport = require('passport');
+
 const service = new ProductsService();
 
 router.get('/filter', (req, res) => {
@@ -29,6 +31,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/',
+  passport.authenticate('jwt', { session: false}),
   validatorHandler(createProductSchema, 'body'),
   async (req, res) => {
   const body = req.body;
