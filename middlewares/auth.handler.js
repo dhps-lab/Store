@@ -10,4 +10,17 @@ function checkApiKey(req, res, next) {
   }
 }
 
-module.exports = {checkApiKey};
+// Do a middleware function to check roles
+
+function checkRole(...roles){
+  return (req, res, next)=>{
+    if(roles.includes(req.user.role)){
+      next();
+
+    } else {
+      next(boom.forbidden());
+    }
+  }
+}
+
+module.exports = {checkApiKey, checkRole};

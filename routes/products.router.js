@@ -3,6 +3,7 @@ const { faker } = require('@faker-js/faker');
 const router = express.Router();
 const ProductsService = require('../services/products.service');
 const validatorHandler = require('../middlewares/validator.handler');
+const { checkRole } = require('../middlewares/auth.handler');
 const { createProductSchema, queryProductSchema } = require('../schemas/product.shcema');
 const passport = require('passport');
 
@@ -13,6 +14,8 @@ router.get('/filter', (req, res) => {
 })
 
 router.get('/',
+  passport.authenticate('jwt', { session: false}),
+  checkRole('admin', 'customer'),
   validatorHandler(queryProductSchema, 'query'),
   async (req, res, next) => {
     try {
@@ -32,6 +35,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/',
   passport.authenticate('jwt', { session: false}),
+  checkRole('admin'),
   validatorHandler(createProductSchema, 'body'),
   async (req, res) => {
   const body = req.body;
