@@ -8,7 +8,20 @@ class OrderService {
   }
 
   async create(data){
-    console.log(data);
+    const customer = await models.Customer.findOne({
+      where: {
+        userId: data.user.sub
+      },
+      include: ['user']
+    });
+    if(data.user.role !== 'customer' && !('customerId' in data) || !customer){
+      throw boom.conflict('User not has a Customer asociated');
+    }else {
+      data = {
+        customerId: customer.dataValues.id
+      }
+    }
+    delete data.user;
     const newOrder = await models.Order.create(data);
     return newOrder;
   }
@@ -26,6 +39,20 @@ class OrderService {
     return orders;
   }
 
+  async findByUser(userId){
+    const orders = await models.Order.findAll({
+      where: {
+        '$customer.user.id$': userId
+      },
+      include: [
+        {
+          association: 'customer',
+          include: ['user']
+        }
+      ],
+    });
+    return orders;
+  }
   async findOne(id){
     const order = await models.Order.findByPk(id, {
       include: [{
