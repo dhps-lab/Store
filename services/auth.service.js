@@ -38,12 +38,28 @@ class AuthService {
     };
   }
 
-  async sendMail(email){
-    //Validate user and put in message
+  async sendRecovery(email){
     const user = await service.findByEmail(email);
     if(!user){
       throw boom.unauthorized();
     }
+    const payload = {
+      sub: user.id
+    }
+    const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '15min'});
+    const link = `http://mystore.com/recovery?token=${token}`;
+    const updtaUser = await service.update(user.id, {recoveryToken: token});
+    const mailInfo = {
+      from: `"Big Brand " <${config.mailFrom}>`,
+      to: `storeDuvTest2@yopmail.com, storeDuvTest@yopmail.com, ${user.email}`,
+      subject: "Email para recuperar contraseña",
+      html: `<b>This is a recovery mail, pleas follow this link => ${link}</b>`,
+    };
+    const rta = await this.sendMail(mailInfo);
+    return rta;
+  }
+
+  async sendMail(mailInfo){
     const transporter = nodemailer.createTransport({
       host: config.mailHost,
       port: config.mailPort,
@@ -53,13 +69,7 @@ class AuthService {
         pass: config.mailPassword,
       },
     });
-    const info = await transporter.sendMail({
-      from: `"Fred Foo 👻" <${config.mailFrom}>`, // sender address
-      to: `storeDuvTest2@yopmail.com, storeDuvTest@yopmail.com, ${user.email}`, // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: "This is a message to recover your account", // plain text body
-      html: "<b>This is a recovery mail</b>", // html body
-    });
+    const info = await transporter.sendMail(mailInfo);
     return { message: 'Mail sent'};
   }
 
